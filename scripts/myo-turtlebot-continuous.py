@@ -49,21 +49,21 @@ if __name__ == '__main__':
 
     # Use the calibrated Myo gestures to drive the turtle
     def drive(gest):
-    rospy.set_param('~guard_action',gest.data)
+        rospy.set_param('~guard_action',gest.data)
 
         if gest.data == 1: # FIST
-        turtlebotPub.publish("go back")
-    elif gest.data == 2: # WAVE_IN, RIGHT arm
-        turtlebotPub.publish("go left")
+            turtlebotPub.publish("go back")
+        elif gest.data == 2: # WAVE_IN, RIGHT arm
+            turtlebotPub.publish("go left")
         elif gest.data == 2 and armState == 2: #WAVE_IN, LEFT arm
-        turtlebotPub.publish("go right")
+            turtlebotPub.publish("go right")
         # elif gest.data == 3 and armState == 1: #WAVE_OUT, RIGHT arm
-    elif gest.data == 3: # WAVE_OUT, RIGHT arm
-        turtlebotPub.publish("go right")
+        elif gest.data == 3: # WAVE_OUT, RIGHT arm
+            turtlebotPub.publish("go right")
         elif gest.data == 3 and armState == 2: # WAVE_OUT, LEFT arm
-        turtlebotPub.publish("go left")
+            turtlebotPub.publish("go left")
         elif gest.data == 4: # FINGERS_SPREAD
-        turtlebotPub.publish("go forward")
+            turtlebotPub.publish("go forward")
 
     rospy.Subscriber("myo_arm", MyoArm, setArm)
     rospy.Subscriber("myo_gest", UInt8, drive)

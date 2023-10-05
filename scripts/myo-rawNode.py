@@ -301,9 +301,9 @@ class MyoRaw(object):
                 typ, val, xdir = unpack('3B', pay)
                 
                 ## Print val for debug
-		print("typ: 1 on arm | 2 removed from arm | 3 pose")
+                print("typ: 1 on arm | 2 removed from arm | 3 pose")
                 print(typ)
-		print("val: 1 go back | 2 go left | 3 go right | 4 go forward | 5 trigger")
+                print("val: 1 go back | 2 go left | 3 go right | 4 go forward | 5 trigger")
                 print(val)
                 # print(xdir)
                 # print(type(val))
@@ -385,16 +385,16 @@ class MyoRaw(object):
 if __name__ == '__main__':
     # Start by initializing the Myo and attempting to connect. 
     # If no Myo is found, we attempt to reconnect every 0.5 seconds
-    connected = 0;
+    connected = 0
     print("Initializing...")
     while(connected == 0):
-    	try:
+    	try:        
     	    m = MyoRaw(sys.argv[1] if len(sys.argv) >= 2 else None)
-	    connected = 1;  
-    	except (ValueError, KeyboardInterrupt) as e:
-	    print("Myo Armband not found. Attempting to connect...")
-	    rospy.sleep(0.5)
-	    pass  	 
+            connected = 1                     
+        except (ValueError, KeyboardInterrupt) as e:
+            print("Myo Armband not found. Attempting to connect...")
+            rospy.sleep(0.5)
+            pass  	 
 
     # Define Publishers
     imuPub  = rospy.Publisher('myo_imu', Imu, queue_size = 10)
@@ -407,7 +407,7 @@ if __name__ == '__main__':
     # Package the EMG data into an EmgArray
     def proc_emg(emg, moving, times = []):
 	## create an array of ints for emg data
-	emgPub.publish(emg)
+        emgPub.publish(emg)
 	
         ## print framerate of received data
         times.append(time.time())
@@ -416,21 +416,21 @@ if __name__ == '__main__':
             times.pop(0)
     # Package the IMU data into an Imu message
     def proc_imu(quat1, acc, gyro):
-	#for acc values, ~2000 is 1g -> multiply by 0.0048
-	#for gyro values....no idea
-	h = Header()
-	h.stamp = rospy.Time.now()
-	h.frame_id = '0'
-	# We currently do not know the covariance of the sensors with each other
-	cov  = [0,0,0,0,0,0,0,0,0]
-	quat = Quaternion(*quat1)
-	## Normalize the quaternion and accelerometer values
-	quatNorm = math.sqrt(quat.x*quat.x+quat.y*quat.y+quat.z*quat.z+quat.w*quat.w)
-	normQuat = Quaternion(quat.x/quatNorm, quat.y/quatNorm, quat.z/quatNorm, quat.w/quatNorm)
-	normAcc  = Vector3(acc[0]*0.0048, acc[1]*0.0048, acc[2]*0.0048)
-	normGyro = Vector3(*gyro)
-	imu = Imu(h, normQuat, cov, normGyro, cov, normAcc, cov)
-	imuPub.publish(imu)
+        #for acc values, ~2000 is 1g -> multiply by 0.0048
+        #for gyro values....no idea
+        h = Header()
+        h.stamp = rospy.Time.now()
+        h.frame_id = '0'
+        # We currently do not know the covariance of the sensors with each other
+        cov  = [0,0,0,0,0,0,0,0,0]
+        quat = Quaternion(*quat1)
+        ## Normalize the quaternion and accelerometer values
+        quatNorm = math.sqrt(quat.x*quat.x+quat.y*quat.y+quat.z*quat.z+quat.w*quat.w)
+        normQuat = Quaternion(quat.x/quatNorm, quat.y/quatNorm, quat.z/quatNorm, quat.w/quatNorm)
+        normAcc  = Vector3(acc[0]*0.0048, acc[1]*0.0048, acc[2]*0.0048)
+        normGyro = Vector3(*gyro)
+        imu = Imu(h, normQuat, cov, normGyro, cov, normAcc, cov)
+        imuPub.publish(imu)
 
     # Package the arm and x-axis direction into an Arm message	
     def proc_arm(arm, xdir):
@@ -447,12 +447,12 @@ if __name__ == '__main__':
         gestPub.publish(p)
 	# gestPub.publish(p.value)
 
-    m.add_emg_handler(proc_emg)
-    m.add_imu_handler(proc_imu)
-    m.add_arm_handler(proc_arm)
-    m.add_pose_handler(proc_pose)
+        m.add_emg_handler(proc_emg)
+        m.add_imu_handler(proc_imu)
+        m.add_arm_handler(proc_arm)
+        m.add_pose_handler(proc_pose)
 
-    m.connect()
+        m.connect()
 
     try:
 
@@ -462,7 +462,7 @@ if __name__ == '__main__':
     except (rospy.ROSInterruptException, serial.serialutil.SerialException) as e:
         pass
     finally:
-	print()
-	print("Disconnecting...")
+        print()
+        print("Disconnecting...")
         m.disconnect()
         print()
