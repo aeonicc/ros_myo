@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from __future__ import print_function
 
@@ -383,18 +383,18 @@ class MyoRaw(object):
             h(arm, xdir)
 
 if __name__ == '__main__':
-    # Start by initializing the Myo and attempting to connect. 
+    # Start by initializing the Myo and attempting to connect.
     # If no Myo is found, we attempt to reconnect every 0.5 seconds
     connected = 0
     print("Initializing...")
-    while(connected == 0):
-    	try:        
-    	    m = MyoRaw(sys.argv[1] if len(sys.argv) >= 2 else None)
-            connected = 1                     
+    while connected == 0:
+        try:
+            m = MyoRaw(sys.argv[1] if len(sys.argv) >= 2 else None)
+            connected = 1
         except (ValueError, KeyboardInterrupt) as e:
             print("Myo Armband not found. Attempting to connect...")
             rospy.sleep(0.5)
-            pass  	 
+            pass
 
     # Define Publishers
     imuPub  = rospy.Publisher('myo_imu', Imu, queue_size = 10)
